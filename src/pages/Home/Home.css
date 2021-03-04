@@ -1,0 +1,15 @@
+.main_header {
+  width: 100%;
+  height: 100vh;
+  background: url("https://static-sl.insales.ru/files/1/7125/9411541/original/slide_fcb029b9cbc73ed997122e21a5ed71ea.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main_header_content {
+  text-align: center;
+  color: white;
+}
