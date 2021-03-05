@@ -13,6 +13,7 @@ import ProductEdit from "./pages/CRUD/ProductEdit";
 import CartContextProvider from "./contexts/CartContext/CartContext";
 import FormPage from "./pages/Form/FormPage";
 import PaymentForm from "./pages/Payment/PaymentForm";
+import Purchases from "./pages/Form/Purchases";
 
 const Routes = () => {
   return (
@@ -24,6 +25,7 @@ const Routes = () => {
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/" component={Home} />
+              <Route exact path="/purchases" component={Purchases} />
               <Route exact path="/products/:id" component={ProductDetails} />
               <Route exact path="/cart" component={Cart} />
               <Route exact path="/formpage" component={FormPage} />

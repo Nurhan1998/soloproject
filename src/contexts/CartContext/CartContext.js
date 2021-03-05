@@ -1,17 +1,23 @@
+import axios from "axios";
 import React, { useReducer } from "react";
+import { API } from "../../helpers/constants";
 
 export const cartContext = React.createContext();
 
 const INIT_STATE = {
   carts: [],
+  pay: [],
+  purchases: [],
 };
 
 const reducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case "GET_CARTS":
       return { ...state, carts: action.payload };
-    case "GET_VALID_CART":
-      return { ...state, validCart: action.payload };
+    case "PAYMENT":
+      return { ...state, pay: action.payload };
+    case "GET_PURCHASES":
+      return { ...state, purchases: action.payload };
     default:
       return state;
   }
@@ -60,6 +66,27 @@ const CartContextProvider = ({ children }) => {
     }
     getCarts();
   };
+  async function getPurchases() {
+    let { data } = await axios(`${API}/users`);
+    let user = data.find((item) => {
+      return item.email === localStorage.getItem("user");
+    });
+    dispatch({
+      type: "GET_PURCHASES",
+      payload: user.purchases,
+    });
+  }
+
+  const handlePurchase = async () => {
+    let { data } = await axios(`${API}/users`);
+    let user = data.find((item) => {
+      return item.email === localStorage.getItem("user");
+    });
+    state.carts?.forEach((element) => {
+      user.purchases.push(element);
+    });
+    await axios.patch(`${API}/users/${user.id}`, user);
+  };
   const deleteCart = (item) => {
     let data = JSON.parse(localStorage.getItem("cart"));
     let res = data.find((elem) => {
@@ -80,16 +107,27 @@ const CartContextProvider = ({ children }) => {
     }
     getCarts();
   };
+  const clickPay = (newObj) => {
+    dispatch({
+      type: "PAYMENT",
+      payload: newObj,
+    });
+  };
 
   return (
     <cartContext.Provider
       value={{
+        pay: state.pay,
         carts: state.carts,
         count: count,
+        purchases: state.purchases,
+        clickPay,
         trashCart,
         getCarts,
         postCart,
         deleteCart,
+        handlePurchase,
+        getPurchases,
       }}
     >
       {children}

@@ -59,7 +59,6 @@ const ProductsContextProvider = ({ children }) => {
       payload: data,
     });
   };
-  console.log(state.productDetail);
   const productDelete = async (id) => {
     await axios.delete(`${API}/products/${id}`);
   };
@@ -69,6 +68,7 @@ const ProductsContextProvider = ({ children }) => {
     getProducts(`${API}/products&limit=${limit}`);
   };
   const handleLike = async (item) => {
+    console.log(item);
     let { data } = await axios(`${API}/products`);
     let res = data.find((elem) => {
       return item.id === elem.id;
@@ -77,10 +77,12 @@ const ProductsContextProvider = ({ children }) => {
       res.likes -= 1;
       await axios.patch(`${API}/products/${item.id}`, res);
       getProducts(`${API}/products?&_limit=${limit}`);
+      getProductDetail(item.id);
     } else {
       res.likes += 1;
       await axios.patch(`${API}/products/${item.id}`, res);
       getProducts(`${API}/products?&_limit=${limit}`);
+      getProductDetail(item.id);
     }
   };
   const productEdit = async (id) => {

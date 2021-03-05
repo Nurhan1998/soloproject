@@ -1,10 +1,31 @@
 import React, { useContext, useState } from "react";
-import { Form, Col, Button, Image, Container } from "react-bootstrap";
+import { Form, Col, Button, Table, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { cartContext } from "../../contexts/CartContext/CartContext";
 
 const FormPage = () => {
-  const { count, trashCart } = useContext(cartContext);
+  const { count, handlePurchase, carts, trashCart } = useContext(cartContext);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [table, setTable] = useState([]);
+
+  const handleClick = () => {
+    if (!name || !phone || !email) {
+      return;
+    }
+    let newObj = {
+      email,
+      name,
+      phone,
+    };
+    setTable(newObj);
+  };
+
+  const handleClickAdd = (e) => {
+    handlePurchase();
+    trashCart();
+  };
   console.log(count);
   return (
     <>
@@ -13,46 +34,72 @@ const FormPage = () => {
           <Form.Row>
             <Form.Group as={Col} controlId="formGridName">
               <Form.Label>Fullname</Form.Label>
-              <Form.Control type="name" placeholder="Enter fullname" />
+              <Form.Control
+                type="name"
+                name="name"
+                placeholder="Enter fullname"
+                onChange={(e) => setName(e)}
+              />
             </Form.Group>
           </Form.Row>
 
           <Form.Group controlId="formGridEmail">
             <Form.Label>Email</Form.Label>
-            <Form.Control placeholder="email@gmail.com" />
+            <Form.Control
+              name="email"
+              placeholder="email@gmail.com"
+              onChange={(e) => setEmail(e)}
+            />
           </Form.Group>
 
           <Form.Group controlId="formGridPhone">
             <Form.Label>Phone</Form.Label>
-            <Form.Control type="number" placeholder="Enter phone" />
+            <Form.Control
+              type="number"
+              name="number"
+              placeholder="Enter phone"
+              onChange={(e) => setPhone(e)}
+            />
           </Form.Group>
 
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridCity">
-              <Form.Label>City</Form.Label>
-              <Form.Control />
-            </Form.Group>
-
-            <Form.Group as={Col} controlId="formGridState">
-              <Form.Label>State</Form.Label>
-              <Form.Control as="select" defaultValue="Choose...">
-                <option>Choose...</option>
-                <option>Chui</option>
-                <option>Talas</option>
-                <option>Issyk-Kol</option>
-                <option>Naryn</option>
-                <option>Jalal-Abad</option>
-                <option>Osh</option>
-                <option>Batken</option>
-              </Form.Control>
-            </Form.Group>
-          </Form.Row>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Photo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {carts?.map((elem, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{elem.name}</td>
+                  <td>{elem.price}</td>
+                  <td style={{ width: "350px" }}>
+                    <img
+                      style={{ width: "100px", height: "100px" }}
+                      src={elem.image}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <p>товары отправятся к {table?.name}</p>
+          <p>{table}</p>
+          <p></p>
           <p>
             Вы выбрали товары на сумму:
             <strong> {count}$</strong>
           </p>
           <Link to="/payment">
-            <Button variant="primary" type="submit" onClick={() => trashCart()}>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={(e) => handleClickAdd(e)}
+            >
               Добавить карту
             </Button>
           </Link>

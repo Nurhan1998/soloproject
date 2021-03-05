@@ -46,8 +46,8 @@ const NaviBar = () => {
             <strong>Home</strong>
           </Link>
 
-          <Link className="nav-link" to="/payment" variant="outline-info">
-            <strong>Payment</strong>
+          <Link className="nav-link" to="/purchases" variant="outline-info">
+            <strong>Purchases</strong>
           </Link>
         </Nav>
 
